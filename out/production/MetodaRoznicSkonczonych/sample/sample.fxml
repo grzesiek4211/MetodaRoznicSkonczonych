@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <center>
       <Canvas fx:id="canvas" height="396.0" onMouseClicked="#CanvasOnMouseClicked" width="368.0" BorderPane.alignment="CENTER" />
    </center>
@@ -19,17 +19,17 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <TextField fx:id="beta" />
+                  <TextField fx:id="beta" promptText="value [1;2]" text="1.5" />
                   <Separator prefWidth="200.0" />
                   <Label text="β" />
                   <Separator prefWidth="200.0" />
-                  <TextField fx:id="epsilon" />
+                  <TextField fx:id="epsilon" text="0.001" />
                   <Separator prefWidth="200.0" />
                   <Label text="ε" />
                   <Separator prefWidth="200.0" />
                   <Button fx:id="save" mnemonicParsing="false" onAction="#onActionSave" text="Save" />
                   <Separator prefWidth="200.0" />
-                  <TextField fx:id="potential" />
+                  <TextField fx:id="potential" promptText="boundary value (line)" text="1" />
                   <Separator prefWidth="200.0" />
                   <Label text="Value of potential" />
                   <Separator prefWidth="200.0" />
@@ -50,27 +50,27 @@
    <right>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Legend" />
+            <Label styleClass="legend" text="Legend" />
             <Separator prefWidth="200.0" />
-            <Label />
+            <Label fx:id="label1" minWidth="98.0" styleClass="label1" />
             <Separator prefWidth="200.0" />
-            <Label />
+            <Label fx:id="label2" minWidth="98.0" styleClass="label2" />
             <Separator prefWidth="200.0" />
-            <Label />
+            <Label fx:id="label3" minWidth="98.0" styleClass="label3" />
             <Separator prefWidth="200.0" />
-            <Label />
+            <Label fx:id="label4" minWidth="98.0" styleClass="label4" />
             <Separator prefWidth="200.0" />
-            <Label />
+            <Label fx:id="label5" minWidth="98.0" styleClass="label5" />
             <Separator prefWidth="200.0" />
-            <Label />
+            <Label fx:id="label6" minWidth="98.0" styleClass="label6" />
             <Separator prefWidth="200.0" />
-            <Label />
+            <Label fx:id="label7" minWidth="98.0" styleClass="label7" />
             <Separator prefWidth="200.0" />
-            <Label />
+            <Label fx:id="label8" minWidth="98.0" styleClass="label8" />
             <Separator prefWidth="200.0" />
-            <Label />
+            <Label fx:id="label9" minWidth="98.0" styleClass="label9" />
             <Separator prefWidth="200.0" />
-            <Label />
+            <Label fx:id="label10" minWidth="98.0" styleClass="label10" />
             <Separator prefWidth="200.0" />
             <Button fx:id="reset" mnemonicParsing="false" onAction="#onActionReset" text="Reset" />
             <VBox alignment="BOTTOM_LEFT" prefHeight="200.0" prefWidth="100.0">

@@ -1,0 +1,85 @@
+.label1 {
+    -fx-background-color: #01024A;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+}
+
+.label2 {
+    -fx-background-color: #002374;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+}
+
+.label3 {
+    -fx-background-color: #004EB7;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+}
+
+.label4 {
+    -fx-background-color: #0075DD;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+}
+
+.label5 {
+    -fx-background-color: #40A96E;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+}
+
+.label6 {
+    -fx-background-color: #D6D402;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+}
+
+.label7 {
+    -fx-background-color: #FD9D18;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+}
+
+.label8 {
+    -fx-background-color: #FE2E39;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+}
+
+.label9 {
+    -fx-background-color: #F81D4E;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+}
+
+.label10 {
+    -fx-background-color: #FD777B;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+}
+
+.legend {
+    /*-fx-font-size: 20px;
+    -fx-font-family: "Century Gothic";
+    -fx-font-weight: bold;*/
+}

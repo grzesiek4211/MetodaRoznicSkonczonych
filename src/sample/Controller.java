@@ -36,6 +36,26 @@ public class Controller {
     public Label iterations;
     @FXML
     public Canvas canvas;
+    @FXML
+    public Label label1;
+    @FXML
+    public Label label2;
+    @FXML
+    public Label label3;
+    @FXML
+    public Label label4;
+    @FXML
+    public Label label5;
+    @FXML
+    public Label label6;
+    @FXML
+    public Label label7;
+    @FXML
+    public Label label8;
+    @FXML
+    public Label label9;
+    @FXML
+    public Label label10;
 
     GraphicsContext gc;
     List<Line> tablica = new ArrayList<Line>();
@@ -51,7 +71,7 @@ public class Controller {
     public double precision; // jak blisko od startowego punktu ma wyłapywać koniec lini i łaczyc z początkiem
     public int rysujemy;
 
-
+    public final String color[] = {"#01024A", "#002374", "#004EB7", "#0075DD", "#40A96E", "#D6D402", "#FD9D18", "#FE2E39", "#F81D4E", "#FD777B"};
 
 
 
