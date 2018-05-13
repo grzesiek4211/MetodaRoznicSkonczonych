@@ -91,7 +91,7 @@ public class Controller {
         prevY = new double[2];
         startX = 0;
         startY = 0;
-        precision = 10;
+        precision = 5;
         rysujemy = 0;
         dbeta = 1.5;
         depsilon = 0.001;
@@ -292,11 +292,12 @@ public class Controller {
         maxX = tablica.get(0).getStartX();
         minY = tablica.get(0).getStartY();
         maxY = tablica.get(0).getStartY();
+
         for (int i = 1; i < tablica.size(); i++) {
             if (tablica.get(i).getStartX() > maxX) maxX = tablica.get(i).getStartX();
-            if (tablica.get(i).getStartX() < maxX) minX = tablica.get(i).getStartX();
+            if (tablica.get(i).getStartX() < minX) minX = tablica.get(i).getStartX();
             if (tablica.get(i).getStartY() > maxY) maxY = tablica.get(i).getStartY();
-            if (tablica.get(i).getStartY() < maxY) minY = tablica.get(i).getStartY();
+            if (tablica.get(i).getStartY() < minY) minY = tablica.get(i).getStartY();
         }
     }
 
@@ -366,8 +367,8 @@ public class Controller {
 
         int sizeX = (int) writableImage.getWidth() + 1;
         int sizeY = (int) writableImage.getHeight() + 1;
-        double pixels[][] = new double[sizeX][sizeY];
-        double pixelsPrev[][] = new double[sizeX][sizeY];
+        double pixels[][] = new double[sizeY][sizeX];
+        double pixelsPrev[][] = new double[sizeY][sizeX];
 
         for (Line item : tablica) {
             double a = Double.parseDouble(item.getUserData().toString());
@@ -380,15 +381,19 @@ public class Controller {
                 if (startY > endY)
                 {
                     for (int j = startY; j > endY; j--) {
-                        pixels[startX][j] = a;
-                        pixelsPrev[startX][j] = a;
+                        //pixels[startX][j] = a;
+                        //pixelsPrev[startX][j] = a;
+                        pixels[j][startX] = a;
+                        pixelsPrev[j][startX] = a;
                     }
                 }
                 else
                 {
                     for (int j = startY; j < endY; j++) {
-                        pixels[startX][j] = a;
-                        pixelsPrev[startX][j] = a;
+                        //pixels[startX][j] = a;
+                        //pixelsPrev[startX][j] = a;
+                        pixels[j][startX] = a;
+                        pixelsPrev[j][startX] = a;
                     }
                 }
             }
@@ -397,21 +402,34 @@ public class Controller {
                 if (startX > endX)
                 {
                     for (int j = startX; j > endX; j--) {
-                        pixels[j][startY] = a;
-                        pixelsPrev[j][startY] = a;
+                        //pixels[j][startY] = a;
+                        //pixelsPrev[j][startY] = a;
+                        pixels[startY][j] = a;
+                        pixelsPrev[startY][j] = a;
+
                     }
                 }
                 else
                 {
                     for (int j = startX; j < endX; j++) {
-                        pixels[j][startY] = a;
-                        pixelsPrev[j][startY] = a;
+                        pixels[startY][j] = a;
+                        pixelsPrev[startY][j] = a;
                     }
                 }
             }
         }
 
+        for(int j = (int)minY; j < (int)maxY+1; j++)
+        {
+            for(int i = (int)minX; i < (int)maxX+1; i++)
+            {
+                System.out.printf("%d ", (int)pixels[j][i]);
+            }
+            System.out.println("");
+        }
+
         pixels = setPixelArray(sizeX, sizeY, pixelsPrev, (int)minX, (int)minY, (int)maxX, (int)maxY);
+
 
         while(!fulfillCondition(pixelsPrev, pixels, (int)minX, (int)minY, (int)maxX, (int)maxY))
         {
@@ -420,11 +438,11 @@ public class Controller {
             pixels = setPixelArray(sizeX, sizeY, pixelsPrev, (int)minX, (int)minY, (int)maxX, (int)maxY);
         }
 
-        for(int i = (int)minX; i < (int)maxX+1; i++)
+        for(int j = (int)minY; j < (int)maxY+1; j++)
         {
-            for(int j = (int)minY; j < (int)maxY+1; j++)
+            for(int i = (int)minX; i < (int)maxX+1; i++)
             {
-                System.out.printf("%f ", pixels[i][j]);
+                System.out.printf("%f ", pixels[j][i]);
             }
             System.out.println("");
         }
@@ -433,10 +451,10 @@ public class Controller {
 
     public boolean fulfillCondition(double[][] tabPrev, double[][] tab, int mnX, int mnY, int mxX, int mxY)
     {
-        for (int i = mnX + 1; i < mxX; i++)
-            for (int k = mnY + 1; k <  mxY; k++) {
+        for (int k = mnY + 1; k <  mxY; k++)
+            for  (int i = mnX + 1; i < mxX; i++){
                 if (!isInside(tablica, i, k)) continue;
-                if (depsilon < abs(tab[i][k] - tabPrev[i][k])) return false;
+                if (depsilon < abs(tab[k][i] - tabPrev[k][i])) return false;
             }
 
         return true;
@@ -445,10 +463,10 @@ public class Controller {
     public double[][] setPrevPixelArray(int sizeX, int sizeY, double[][] tab, int mnX, int mnY, int mxX, int mxY)
     {
         double pixelsPrev[][] = new double[sizeX][sizeY];
-        for (int i = mnX; i < mxX+1; i++) {
-            for (int k = mnY; k < mxY+1; k++) {
+        for (int k = mnY; k < mxY+1; k++) {
+            for  (int i = mnX; i < mxX+1; i++){
                 //if (!isInside(tablica, i, k)) continue;
-                pixelsPrev[i][k] = tab[i][k];
+                pixelsPrev[k][i] = tab[k][i];
             }
         }
 
@@ -458,16 +476,16 @@ public class Controller {
     public double[][] setPixelArray(int sizeX, int sizeY, double[][] pixelsPrev, int mnX, int mnY, int mxX, int mxY)
     {
         double pixels[][] = new double[sizeX][sizeY];
-        for(int i = mnX; i < mxX+1; i++)
+        for(int j = mnY; j < mxY+1; j++)
         {
-            for(int j = mnY; j < mxY+1; j++)
-                pixels[i][j] = pixelsPrev[i][j];
+            for(int i = mnX; i < mxX+1; i++)
+                pixels[j][i] = pixelsPrev[j][i];
         }
-        for (int i = mnX + 1; i < mxX; i++) {
-            for (int k = mnY + 1; k < mxY; k++) {
+        for  (int k = mnY + 1; k < mxY; k++){
+            for (int i = mnX + 1; i < mxX; i++) {
                 if (!isInside(tablica, i, k)) continue;
-                double Asr = 1.0 / 4.0 * (pixels[i + 1][k] + pixels[i][k + 1] + pixels[i - 1][k] + pixels[i][k - 1]);
-                pixels[i][k] = pixelsPrev[i][k] + dbeta * (Asr - pixelsPrev[i][k]);
+                double Asr = 1.0 / 4.0 * (pixels[k + 1][i] + pixels[k][i + 1] + pixels[k - 1][i] + pixels[k][i - 1]);
+                pixels[k][i] = pixelsPrev[k][i] + dbeta * (Asr - pixelsPrev[k][i]);
             }
         }
         return pixels;
@@ -507,24 +525,24 @@ public class Controller {
                 if (a < Double.parseDouble(interval.get(k).toString())) {
                     if (startX == endX) {
                         if (startY > endY) {
-                            for (int j = startY; j > endY; j--) {
+                            for (int j = startY; j >= endY; j--) {
                                 writableImage.getPixelWriter().setColor(startX, j, Color.web(color[k - 1]));
                             }
                             break;
                         } else {
-                            for (int j = startY; j < endY; j++) {
+                            for (int j = startY; j <= endY; j++) {
                                 writableImage.getPixelWriter().setColor(startX, j, Color.web(color[k - 1]));
                             }
                             break;
                         }
                     } else if (startY == endY) {
                         if (startX > endX) {
-                            for (int j = startX; j > endX; j--) {
+                            for (int j = startX; j >= endX; j--) {
                                 writableImage.getPixelWriter().setColor(j, startY, Color.web(color[k - 1]));
                             }
                             break;
                         } else {
-                            for (int j = startX; j < endX; j++) {
+                            for (int j = startX; j <= endX; j++) {
                                 writableImage.getPixelWriter().setColor(j, startY, Color.web(color[k - 1]));
                             }
                             break;
@@ -534,16 +552,22 @@ public class Controller {
             }
         }
         // colorowanie środka
-        for(int i = (int)minX+1 ; i < (int)maxX; i++){
-            for(int j = (int)minY+1; j < (int)maxY; j++)
+        for(int j = (int)minY; j < (int)maxY+1; j++) {
+            for(int i = (int)minX ; i < (int)maxX+1; i++)
             {
                 if (!isInside(tablica, i, j)) continue;
                 for(int k = 0; k < interval.size(); k++)
                 {
-                    if(pixels[i][j] < Double.parseDouble(interval.get(k).toString()))
+                    if(pixels[j][i] < Double.parseDouble(interval.get(k).toString()))
                     {
-                        writableImage.getPixelWriter().setColor(i,j, Color.web(color[k-1]));
-                        break;
+                        if(pixels[j][i] < Double.parseDouble(interval.get(0).toString())) { // to jest tylko dlatego ze wczesniej jest cos zepsute i wyjatkiem rzuca
+                            writableImage.getPixelWriter().setColor(i, j, Color.web("#000000"));
+                            break;
+                        }
+                        else {
+                            writableImage.getPixelWriter().setColor(i, j, Color.web(color[k - 1]));
+                            break;
+                        }
                     }
                 }
 
