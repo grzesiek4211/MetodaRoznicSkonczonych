@@ -13,6 +13,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ public class Controller {
     List<Line> tablica = new ArrayList<Line>();
     List interval = new ArrayList();
     Line line = new Line();
+    Polygon polygon = new Polygon();
 
     public int flaga;
     public int flaga_blockX;
@@ -97,7 +99,8 @@ public class Controller {
         depsilon = 0.001;
 
         gc = canvas.getGraphicsContext2D();
-        gc.setLineWidth(1);
+        //gc.setLineWidth(2);
+        this.start.setDisable(true);
     }
 
 
@@ -110,15 +113,15 @@ public class Controller {
 
         this.beta.setDisable(true);
         this.epsilon.setDisable(true);
-        System.out.println(dbeta);
-        System.out.println(depsilon);
+        this.start.setDisable(false);
     }
 
     public void onActionStart(ActionEvent actionEvent) {
 
+        CreatePolygon();
         WritableImage writableImage = getWritableImageFromCanvas(this.canvas);
         double pixels[][] = countValuePixel(writableImage);
-        setInterval(tablica);
+        setInterval(tablica, pixels);
         writableImage = PaintCanvas(pixels);
         gc.drawImage(writableImage, 0, 0);
 
@@ -126,14 +129,14 @@ public class Controller {
     }
 
     public void onActionReset(ActionEvent actionEvent) {
-        this.epsilon.clear();
+        //this.epsilon.clear();
         this.beta.clear();
         this.beta.setDisable(false);
-        this.epsilon.setDisable(false);
+        //this.epsilon.setDisable(false);
         counterIteration = 0;
         this.iterations.setText("");
 
-        WritableImage writableImage = getWritableImageFromCanvas(this.canvas);
+        WritableImage writableImage;// = getWritableImageFromCanvas(this.canvas);
         writableImage = resetCanvas();
         gc.drawImage(writableImage, 0, 0);
     }
@@ -293,6 +296,7 @@ public class Controller {
         minY = tablica.get(0).getStartY();
         maxY = tablica.get(0).getStartY();
 
+        System.out.println(minX+" "+maxX+" "+minY+" "+maxY);
         for (int i = 1; i < tablica.size(); i++) {
             if (tablica.get(i).getStartX() > maxX) maxX = tablica.get(i).getStartX();
             if (tablica.get(i).getStartX() < minX) minX = tablica.get(i).getStartX();
@@ -301,7 +305,74 @@ public class Controller {
         }
     }
 
+    public boolean isInside1(List<Line> tablica, int x, int y) {
+
+        double up = 0; // ile linii jest nad pixelem
+        double down = 0; // ile linii jest pod pixelem
+        double right = 0; // ile linii jest z prawej pixelem
+        double left = 0; // ile linii jest z lewej pixelem
+        for(Line l : tablica)
+        {
+            if( ( x >= l.getStartX() && x <= l.getEndX() ) || ( x <= l.getStartX() && x >= l.getEndX() ) )
+            {
+                if (y > l.getStartY() && y > l.getEndY()) down++;
+                else if (y < l.getEndY() && y < l.getEndY()) up++;
+            }
+
+            if( ( y >= l.getStartY() && y <= l.getEndY() ) || ( y <= l.getStartY() && y >= l.getEndY() ) )
+            {
+                if (x > l.getStartX() && x > l.getEndX()) left++;
+                else if (x < l.getStartX() && x < l.getEndX()) right++;
+            }
+        }
+
+
+        /*List lineHorizontal = new ArrayList(); // będę tu trzymał indeksy lini poziomych, które leżą pod lub nad pixelem
+        List lineVertical = new ArrayList(); // będę tu trzymał indeksy lini pionowych, które leżą obok pixela
+        for (int i = 0; i < tablica.size(); i++) {
+            if (tablica.get(i).getStartX() == tablica.get(i).getEndX()) {
+                if ( ( y > tablica.get(i).getStartY() && y < tablica.get(i).getEndY() ) || ( y < tablica.get(i).getStartY() && y > tablica.get(i).getEndY() ) )
+                    lineVertical.add(i);
+            } else if (tablica.get(i).getStartY() == tablica.get(i).getEndY()) {
+                if ( ( x > tablica.get(i).getStartX() && x < tablica.get(i).getEndX() ) || ( x < tablica.get(i).getStartX() && x > tablica.get(i).getEndX() ) )
+                    lineHorizontal.add(i);
+            }
+        }
+
+        double up = 0; // ile linii jest nad pixelem
+        double down = 0; // ile linii jest pod pixelem
+
+        for (int i = 0; i < lineHorizontal.size(); i++) {
+            if ((tablica.get((int) lineHorizontal.get(i)).getStartY() - y) > 0) up++;
+            if ((tablica.get((int) lineHorizontal.get(i)).getStartY() - y) < 0) down++;
+        }
+
+        if (up % 2 == 0) return false; // nad jest parzysta liczba linii, czyli jest
+        if (down % 2 == 0) return false;
+
+        double right = 0; // ile linii jest z prawej pixelem
+        double left = 0; // ile linii jest z lewej pixelem
+
+        for (int i = 0; i < lineVertical.size(); i++) {
+            if ((tablica.get((int) lineVertical.get(i)).getStartX() - x) > 0) left++;
+            if ((tablica.get((int) lineVertical.get(i)).getStartX() - x) < 0) right++;
+        }
+
+        if (left % 2 == 0) return false;
+        if (right % 2 == 0) return false;*/
+
+        if (up % 2 == 0) return false; // nad jest parzysta liczba linii, czyli jest
+        if (down % 2 == 0) return false;
+        if (left % 2 == 0) return false;
+        //if (right % 2 == 0) return false;
+        return true;
+    }
     public boolean isInside(List<Line> tablica, int x, int y) {
+
+        return polygon.contains(x,y);
+    }
+    public boolean isInside2(List<Line> tablica, int x, int y) {
+
         List lineHorizontal = new ArrayList(); // będę tu trzymał indeksy lini poziomych, które leżą pod lub nad pixelem
         List lineVertical = new ArrayList(); // będę tu trzymał indeksy lini pionowych, które leżą obok pixela
         for (int i = 0; i < tablica.size(); i++) {
@@ -339,12 +410,18 @@ public class Controller {
         return true;
     }
 
-    public void setInterval(List<Line> tablica) {
+    public void setInterval(List<Line> tablica, double[][] pixels) {
         if (tablica.size() <= 1) return;
         double min;
         double max;
         min = Double.parseDouble(tablica.get(0).getUserData().toString());
         max = Double.parseDouble(tablica.get(0).getUserData().toString());
+
+        for  (int k = (int)minY + 1; k < (int)maxY; k++)
+            for (int i = (int)minX + 1; i < (int)maxX; i++)
+                if (isInside(tablica, i, k))
+                    if(min > pixels[k][i])
+                        min = pixels[k][i];
 
         for (int i = 1; i < tablica.size(); i++) {
             if (Double.parseDouble(tablica.get(i).getUserData().toString()) > max)
@@ -365,65 +442,32 @@ public class Controller {
         counterIteration = 1;
         minAndMaxCoOrdinates(tablica);
 
-        int sizeX = (int) writableImage.getWidth() + 1;
-        int sizeY = (int) writableImage.getHeight() + 1;
+        int sizeX = (int) writableImage.getWidth();
+        int sizeY = (int) writableImage.getHeight();
         double pixels[][] = new double[sizeY][sizeX];
         double pixelsPrev[][] = new double[sizeY][sizeX];
 
-        for (Line item : tablica) {
-            double a = Double.parseDouble(item.getUserData().toString());
-
-            int startX = (int)item.getStartX();
-            int endX = (int)item.getEndX();
-            int startY = (int)item.getStartY();
-            int endY = (int)item.getEndY();
-            if(startX == endX) {
-                if (startY > endY)
-                {
-                    for (int j = startY; j > endY; j--) {
-                        //pixels[startX][j] = a;
-                        //pixelsPrev[startX][j] = a;
-                        pixels[j][startX] = a;
-                        pixelsPrev[j][startX] = a;
-                    }
-                }
-                else
-                {
-                    for (int j = startY; j < endY; j++) {
-                        //pixels[startX][j] = a;
-                        //pixelsPrev[startX][j] = a;
-                        pixels[j][startX] = a;
-                        pixelsPrev[j][startX] = a;
-                    }
-                }
-            }
-            else if (startY == endY)
-            {
-                if (startX > endX)
-                {
-                    for (int j = startX; j > endX; j--) {
-                        //pixels[j][startY] = a;
-                        //pixelsPrev[j][startY] = a;
-                        pixels[startY][j] = a;
-                        pixelsPrev[startY][j] = a;
-
-                    }
-                }
-                else
-                {
-                    for (int j = startX; j < endX; j++) {
-                        pixels[startY][j] = a;
-                        pixelsPrev[startY][j] = a;
-                    }
-                }
-            }
-        }
+        // ustawienie wartosci na obwodzie
+        pixels = setValueOnBoundary(pixels, sizeX, sizeY);
+        pixelsPrev = setValueOnBoundary(pixelsPrev, sizeX, sizeY);
 
         for(int j = (int)minY; j < (int)maxY+1; j++)
         {
             for(int i = (int)minX; i < (int)maxX+1; i++)
             {
                 System.out.printf("%d ", (int)pixels[j][i]);
+            }
+            System.out.println("");
+        }
+        System.out.println("");
+
+        for(int j = (int)minY; j < (int)maxY+1; j++)
+        {
+            for(int i = (int)minX; i < (int)maxX+1; i++)
+            {
+                if(isInside(tablica, i, j))
+                    System.out.printf("0 ");
+                else System.out.printf("1 ");
             }
             System.out.println("");
         }
@@ -463,31 +507,37 @@ public class Controller {
     public double[][] setPrevPixelArray(int sizeX, int sizeY, double[][] tab, int mnX, int mnY, int mxX, int mxY)
     {
         double pixelsPrev[][] = new double[sizeX][sizeY];
+        //pixelsPrev = setValueOnBoundary(pixelsPrev, sizeX, sizeY);
         for (int k = mnY; k < mxY+1; k++) {
             for  (int i = mnX; i < mxX+1; i++){
                 //if (!isInside(tablica, i, k)) continue;
                 pixelsPrev[k][i] = tab[k][i];
             }
         }
-
+        //pixelsPrev = setValueOnBoundary(pixelsPrev, sizeX, sizeY);
         return pixelsPrev;
     }
 
     public double[][] setPixelArray(int sizeX, int sizeY, double[][] pixelsPrev, int mnX, int mnY, int mxX, int mxY)
     {
         double pixels[][] = new double[sizeX][sizeY];
+        //pixels = setValueOnBoundary(pixels, sizeX, sizeY);
         for(int j = mnY; j < mxY+1; j++)
         {
             for(int i = mnX; i < mxX+1; i++)
                 pixels[j][i] = pixelsPrev[j][i];
         }
+        //pixels = setValueOnBoundary(pixels, sizeX, sizeY);
         for  (int k = mnY + 1; k < mxY; k++){
             for (int i = mnX + 1; i < mxX; i++) {
-                if (!isInside(tablica, i, k)) continue;
-                double Asr = 1.0 / 4.0 * (pixels[k + 1][i] + pixels[k][i + 1] + pixels[k - 1][i] + pixels[k][i - 1]);
-                pixels[k][i] = pixelsPrev[k][i] + dbeta * (Asr - pixelsPrev[k][i]);
+                if (isInside(tablica, i, k))
+                {
+                    double Asr = 1.0 / 4.0 * (pixels[k + 1][i] + pixels[k][i + 1] + pixels[k - 1][i] + pixels[k][i - 1]);
+                    pixels[k][i] = pixelsPrev[k][i] + dbeta * (Asr - pixelsPrev[k][i]);
+                }
             }
         }
+        //pixels = setValueOnBoundary(pixels, sizeX, sizeY);
         return pixels;
     }
 
@@ -495,25 +545,7 @@ public class Controller {
     {
         WritableImage writableImage = getWritableImageFromCanvas(this.canvas);
 
-        // Colorowanie linii
         /*for (Line item : tablica) {
-            double a = Double.parseDouble(item.getUserData().toString());
-
-            for(int k = 0; k < interval.size(); k++)
-            {
-                if(a < Double.parseDouble(interval.get(k).toString()))
-                {
-                    for (int i = (int) item.getStartX(); i < (int) item.getEndX(); i++) {
-                        for (int j = (int) item.getStartY(); j < (int) item.getEndY(); j++) {
-                            writableImage.getPixelWriter().setColor(i,j, Color.web(color[k-1]));
-                        }
-                    }
-                    break;
-                }
-            }
-        }*/
-
-        for (Line item : tablica) {
             double a = Double.parseDouble(item.getUserData().toString());
 
             int startX = (int) item.getStartX();
@@ -526,31 +558,39 @@ public class Controller {
                     if (startX == endX) {
                         if (startY > endY) {
                             for (int j = startY; j >= endY; j--) {
-                                writableImage.getPixelWriter().setColor(startX, j, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(startX, j, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(startX-1, j, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(startX+1, j, Color.web(color[k - 1]));
                             }
                             break;
                         } else {
                             for (int j = startY; j <= endY; j++) {
-                                writableImage.getPixelWriter().setColor(startX, j, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(startX, j, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(startX-1, j, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(startX+1, j, Color.web(color[k - 1]));
                             }
                             break;
                         }
                     } else if (startY == endY) {
                         if (startX > endX) {
                             for (int j = startX; j >= endX; j--) {
-                                writableImage.getPixelWriter().setColor(j, startY, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(j, startY, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(j, startY-1, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(j, startY+1, Color.web(color[k - 1]));
                             }
                             break;
                         } else {
                             for (int j = startX; j <= endX; j++) {
-                                writableImage.getPixelWriter().setColor(j, startY, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(j, startY, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(j, startY-1, Color.web(color[k - 1]));
+                                //writableImage.getPixelWriter().setColor(j, startY+1, Color.web(color[k - 1]));
                             }
                             break;
                         }
                     }
                 }
             }
-        }
+        }*/
         // colorowanie środka
         for(int j = (int)minY; j < (int)maxY+1; j++) {
             for(int i = (int)minX ; i < (int)maxX+1; i++)
@@ -582,18 +622,9 @@ public class Controller {
 
         WritableImage writableImage = getWritableImageFromCanvas(this.canvas);
 
-        // kolorowanie linii na czarno
-        for (Line item : tablica) {
-            for (int i = (int) item.getStartX(); i < (int) item.getEndX(); i++) {
-                for (int j = (int) item.getStartY(); j < (int) item.getEndY(); j++) {
-                    writableImage.getPixelWriter().setColor(i,j, Color.web("#000000"));
-                }
-            }
-        }
-
         // colorowanie środka
-        for(int i = (int)minX+1 ; i < (int)maxX; i++){
-            for(int j = (int)minY; j < (int)maxY; j++)
+        for(int i = (int)minX-1 ; i < (int)maxX+2; i++){
+            for(int j = (int)minY-1; j < (int)maxY+2; j++)
             {
                 if (!isInside(tablica, i, j)) continue;
                 for(int k = 0; k < interval.size(); k++)
@@ -603,8 +634,75 @@ public class Controller {
 
             }
         }
+        // kolorowanie linii na czarno
+        for (Line item : tablica) {
+            for (int i = (int) item.getStartX(); i < (int) item.getEndX(); i++) {
+                for (int j = (int) item.getStartY(); j < (int) item.getEndY(); j++) {
+                    writableImage.getPixelWriter().setColor(i,j, Color.web("#000000"));
+                }
+            }
+        }
+        //gc.
+
         return writableImage;
 
+    }
+
+    public void CreatePolygon()
+    {
+        /*for(Line l : tablica)
+        {
+            polygon.getPoints().addAll(l.getEndX(), l.getEndY());
+        }*/
+        for(Line l : tablica)
+        {
+            polygon.getPoints().add(l.getEndX());
+            polygon.getPoints().add(l.getEndY());
+        }
+    }
+
+    public double[][] setValueOnBoundary(double pixels[][], int sizeX, int sizeY)
+    {
+        for (Line item : tablica) {
+            double a = Double.parseDouble(item.getUserData().toString());
+
+            int startX = (int)item.getStartX();
+            int endX = (int)item.getEndX();
+            int startY = (int)item.getStartY();
+            int endY = (int)item.getEndY();
+            if(startX == endX) {
+                if (startY > endY)
+                    for (int j = startY; j > endY; j--) {
+                        pixels[j][startX] = a;
+                        pixels[j][startX+1] = a; //teoretycznie moze wyjsc po za zakres, trzeba iffy tu wszedzie dorobic
+                        pixels[j][startX-1] = a;
+                    }
+                else
+                    for (int j = startY; j < endY; j++)
+                    {
+                        pixels[j][startX] = a;
+                        pixels[j][startX+1] = a;
+                        pixels[j][startX-1] = a;
+                    }
+            }
+            else if (startY == endY)
+            {
+                if (startX > endX)
+                    for (int j = startX; j > endX; j--) {
+                        pixels[startY][j] = a;
+                        pixels[startY+1][j] = a;
+                        pixels[startY-1][j] = a;
+                    }
+                else
+                    for (int j = startX; j < endX; j++) {
+                        pixels[startY][j] = a;
+                        pixels[startY + 1][j] = a;
+                        pixels[startY - 1][j] = a;
+                    }
+            }
+        }
+
+        return pixels;
     }
 }
 
