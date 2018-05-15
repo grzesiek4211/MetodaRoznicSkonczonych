@@ -79,7 +79,52 @@
 }
 
 .legend {
-    /*-fx-font-size: 20px;
+    -fx-font-size: 17px;
     -fx-font-family: "Century Gothic";
-    -fx-font-weight: bold;*/
+    -fx-font-weight: bold;
+}
+
+.start {
+    -fx-background-color: #555555;
+    -fx-border: none;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 15px 30px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+    -fx-font-size: 15px;
+    -fx-background-radius: 50%;
+}
+
+.reset {
+    -fx-background-color: #f44336; /* Red */
+    -fx-border: none;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 10px 15px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+    -fx-font-size: 13px;
+}
+
+.save {
+    -fx-background-color: #4CAF50; /* Green */
+    -fx-border: none;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 10px 15px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;
+    -fx-font-size: 13px;
+}
+
+.iterations {
+    /*-fx-background-color: #FF9999;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 5px;
+    -fx-text-align: center;
+    -fx-text-decoration: none;*/
+}
+
+.labelStart {
+    -fx-font-size: 10px;
+    -fx-font-family: "Century Gothic";
+    -fx-font-style: italic;
 }

@@ -19,23 +19,25 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
+                  <Separator minHeight="-Infinity" prefHeight="15.0" prefWidth="200.0" />
                   <TextField fx:id="beta" promptText="value [1;2]" text="1.5" />
-                  <Separator prefWidth="200.0" />
+                  <Separator minHeight="-Infinity" prefHeight="15.0" prefWidth="200.0" />
                   <Label text="β" />
-                  <Separator prefWidth="200.0" />
+                  <Separator minHeight="-Infinity" prefHeight="15.0" prefWidth="200.0" />
                   <TextField fx:id="epsilon" text="0.001" />
                   <Separator prefWidth="200.0" />
                   <Label text="ε" />
-                  <Separator prefWidth="200.0" />
-                  <Button fx:id="save" mnemonicParsing="false" onAction="#onActionSave" text="Save" />
-                  <Separator prefWidth="200.0" />
+                  <Separator minHeight="-Infinity" prefHeight="15.0" prefWidth="200.0" />
+                  <Button fx:id="save" mnemonicParsing="false" onAction="#onActionSave" styleClass="save" text="Save" />
+                  <Separator minHeight="-Infinity" prefHeight="25.0" prefWidth="200.0" />
                   <TextField fx:id="potential" promptText="boundary value (line)" text="1" />
                   <Separator prefWidth="200.0" />
                   <Label text="Value of potential" />
                   <Separator prefWidth="200.0" />
                   <VBox alignment="BOTTOM_LEFT" prefHeight="228.0" prefWidth="100.0">
                      <children>
-                        <Button fx:id="start" mnemonicParsing="false" onAction="#onActionStart" text="Start" />
+                        <Button fx:id="start" mnemonicParsing="false" onAction="#onActionStart" styleClass="start" text="Start" />
+                        <Label fx:id="message" alignment="CENTER" prefHeight="44.0" prefWidth="100.0" styleClass="labelStart" text="Kliknij Save, aby odblokwać start" textAlignment="CENTER" wrapText="true" />
                      </children>
                   </VBox>
                </children>
@@ -71,12 +73,18 @@
             <Label fx:id="label9" minWidth="98.0" styleClass="label9" />
             <Separator prefWidth="200.0" />
             <Label fx:id="label10" minWidth="98.0" styleClass="label10" />
-            <Separator prefWidth="200.0" />
-            <Button fx:id="reset" mnemonicParsing="false" onAction="#onActionReset" text="Reset" />
+            <Separator minHeight="-Infinity" prefHeight="25.0" prefWidth="200.0">
+               <opaqueInsets>
+                  <Insets bottom="10.0" />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></Separator>
+            <Button fx:id="reset" mnemonicParsing="false" onAction="#onActionReset" styleClass="reset" text="Reset" />
             <VBox alignment="BOTTOM_LEFT" prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Label fx:id="iterations" />
-                  <Label text="Iterations" />
+                  <Label styleClass="iterations" text="Iterations" />
                </children>
             </VBox>
          </children>
